@@ -1,0 +1,6 @@
+- name: Reload or start the nginx service
+  systemd:
+    name: nginx.service
+    state: reloaded
+  listen: reload_nginx
+  become: true

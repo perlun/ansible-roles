@@ -1,0 +1,12 @@
+- name: Runs the nginx role
+  hosts: all
+
+  pre_tasks:
+    - import_tasks: include/common_pre_tasks.yml
+
+  roles:
+    - role: nginx
+
+  module_defaults:
+    apt:
+      force_apt_get: yes

@@ -1,0 +1,27 @@
+# The path in the inventory to where the files in /etc/nginx/sites-enabled will
+# be copied from. Note that no default value is provided by this role; you must
+# set in the inventory on host/group level.
+#
+# Typical override value:
+# {{ inventory_dir }}/overrides/<host>/nginx/etc/nginx
+nginx_etc_nginx_path: null
+
+#
+# Variables below this line typically do not have to be modified.
+#
+nginx_sites_enabled_path: '{{ nginx_etc_nginx_path }}/sites-enabled'
+nginx_conf_d_path: '{{ nginx_etc_nginx_path }}/conf.d'
+
+# Owner and group for files in /etc/nginx/sites-enabled
+nginx_sites_enabled_owner: root
+nginx_sites_enabled_group: root
+
+# Owner and group for files in /etc/nginx/conf.d
+nginx_conf_d_owner: www-data
+nginx_conf_d_group: root
+nginx_conf_d_mode: 0600
+
+nginx_managed_by_ansible_header: |-
+  #
+  # MANAGED BY ANSIBLE, DO NOT EDIT MANUALLY!
+  #

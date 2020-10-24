@@ -1,0 +1,58 @@
+- name: Ensure mandatory variables are set
+  fail:
+    msg: "Mandatory variable nginx_etc_nginx_path must be set"
+  when: nginx_etc_nginx_path == None
+
+- name: Install/update nginx
+  ansible.builtin.package:
+    name: nginx
+
+    # Deliberately not using 'state: latest' to avoid unexpected surprises when
+    # e.g. deploying updated configuration.
+    state: present
+  become: true
+
+- name: Copy options-ssl-nginx.conf to /etc/nginx/ssl
+  ansible.builtin.copy:
+    src: files/etc/nginx/ssl/options-ssl-nginx.conf
+    dest: /etc/nginx/ssl/options-ssl-nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+
+- name: Find nginx sites-enabled files
+  find:
+    paths: '{{ nginx_sites_enabled_path }}'
+    patterns: '*'
+  register: sites_enabled_files
+  delegate_to: 127.0.0.1
+
+- name: Copy configuration to /etc/nginx/sites-enabled
+  ansible.builtin.template:
+    src: '{{ item.path }}'
+    dest: /etc/nginx/sites-enabled/{{ item.path | basename | replace('.j2', '') }}
+    owner: '{{ nginx_sites_enabled_owner }}'
+    group: '{{ nginx_sites_enabled_group }}'
+    mode: 0644
+  become: true
+  loop: '{{ sites_enabled_files.files }}'
+  notify: reload_nginx
+
+- name: Find nginx conf.d files
+  find:
+    paths: '{{ nginx_conf_d_path }}'
+    patterns: '*'
+  register: conf_d_files
+  delegate_to: 127.0.0.1
+
+- name: Copy configuration to /etc/nginx/conf.d
+  ansible.builtin.template:
+    src: '{{ item.path }}'
+    dest: /etc/nginx/conf.d/{{ item.path | basename | replace('.j2', '') }}
+    owner: '{{ nginx_conf_d_owner }}'
+    group: '{{ nginx_conf_d_group }}'
+    mode: '{{ nginx_conf_d_mode }}'
+  become: true
+  loop: '{{ conf_d_files.files }}'
+  notify: reload_nginx

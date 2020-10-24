@@ -1,0 +1,9 @@
+#
+# Common pre_tasks which are run before any roles specified in the role playbook.
+#
+
+- name: Fail if host limit is not provided
+  fail:
+    msg: "You must use -l or --limit to specify which hosts the playbook should be applied to"
+  when: ansible_limit is not defined
+  run_once: true
