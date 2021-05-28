@@ -5,12 +5,25 @@
 
 - name: Install/update nginx
   ansible.builtin.package:
-    name: nginx
+    name:
+      - nginx
+      - libnginx-mod-http-perl
 
     # Deliberately not using 'state: latest' to avoid unexpected surprises when
     # e.g. deploying updated configuration.
     state: present
   become: true
+
+- name: Enable additional nginx modules
+  file:
+    dest: /etc/nginx/modules-enabled/{{ item.dest }}
+    src: /usr/share/nginx/modules-available/{{ item.src }}
+    state: link
+  with_items:
+  - dest: 50-mod-http-perl.conf
+    src: mod-http-perl.conf
+  become: true
+  notify: reload_nginx
 
 - name: Copy options-ssl-nginx.conf to /etc/nginx/ssl
   ansible.builtin.copy:
@@ -20,6 +33,15 @@
     group: root
     mode: 0644
   become: true
+  notify: reload_nginx
+
+# The package-provided file conflicts with the configurations we provide.
+- name: Remove /etc/nginx/sites-enabled/default
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  become: true
+  notify: reload_nginx
 
 - name: Find nginx sites-enabled files
   find:
