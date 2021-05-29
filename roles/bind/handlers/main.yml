@@ -1,0 +1,6 @@
+- name: Reload or start the bind service
+  systemd:
+    name: bind9.service
+    state: reloaded
+  listen: reload_bind
+  become: true

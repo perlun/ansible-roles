@@ -1,0 +1,7 @@
+# The path in the inventory to where the files in /etc/bind will be copied from.
+# Note that no default value is provided by this role; you must set in the
+# inventory on host/group level.
+#
+# Typical override value:
+# {{ inventory_dir }}/overrides/<host>/bind/etc/bind
+bind_etc_bind_path: null

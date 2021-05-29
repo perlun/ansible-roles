@@ -1,0 +1,33 @@
+- name: Ensure mandatory variables are set
+  fail:
+    msg: "Mandatory variable bind_etc_bind_path must be set"
+  when: bind_etc_bind_path == None
+
+- name: Install/update bind9
+  ansible.builtin.package:
+    name:
+      - bind9
+
+    # Deliberately not using 'state: latest' to avoid unexpected surprises when
+    # e.g. deploying updated configuration.
+    state: present
+  become: true
+
+- name: Find /etc/bind files
+  find:
+    paths: '{{ bind_etc_bind_path }}'
+    patterns: '*'
+  register: etc_bind_files
+  delegate_to: 127.0.0.1
+
+- name: Copy configuration to /etc/bind
+  ansible.builtin.template:
+    src: '{{ item.path }}'
+    dest: /etc/bind/{{ item.path | basename | replace('.j2', '') }}
+    owner: root
+    group: bind
+    mode: 0644
+    backup: false
+  become: true
+  loop: '{{ etc_bind_files.files }}'
+  notify: reload_bind
