@@ -1,0 +1,12 @@
+- name: Runs the awstats role
+  hosts: all
+
+  pre_tasks:
+    - import_tasks: include/common_pre_tasks.yml
+
+  roles:
+    - role: awstats
+
+  module_defaults:
+    apt:
+      force_apt_get: yes

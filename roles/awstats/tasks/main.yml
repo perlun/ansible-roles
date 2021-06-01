@@ -1,0 +1,41 @@
+- name: Ensure mandatory variables are set
+  fail:
+    msg: "Mandatory variable awstats_etc_awstats_path must be set"
+  when: awstats_etc_awstats_path == None
+
+- name: Install/update awstats
+  ansible.builtin.package:
+    name:
+      - awstats
+      - libgeo-ip-perl
+
+    # Deliberately not using 'state: latest' to avoid unexpected surprises when
+    # e.g. deploying updated configuration.
+    state: present
+  become: true
+
+# The package-provided file is not relevant for us; we replace it with local
+# configs for the various sites we deploy
+- name: Remove /etc/awstats/awstats.conf
+  ansible.builtin.file:
+    path: /etc/awstats/awstats.conf
+    state: absent
+  become: true
+
+- name: Find /etc/awstats files
+  find:
+    paths: '{{ awstats_etc_awstats_path }}'
+    patterns: '*'
+  register: etc_awstats_files
+  delegate_to: 127.0.0.1
+
+- name: Copy configuration to /etc/awstats
+  ansible.builtin.template:
+    src: '{{ item.path }}'
+    dest: /etc/awstats/{{ item.path | basename | replace('.j2', '') }}
+    owner: root
+    group: root
+    mode: 0644
+    backup: false
+  become: true
+  loop: '{{ etc_awstats_files.files }}'
