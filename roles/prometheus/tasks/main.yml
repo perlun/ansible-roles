@@ -1,0 +1,29 @@
+- name: Install/update Prometheus
+  ansible.builtin.package:
+    name:
+      - prometheus
+
+    # Deliberately not using 'state: latest' to avoid unexpected surprises when
+    # e.g. deploying updated configuration.
+    state: present
+  become: true
+
+- name: Copy prometheus.yml to /etc/prometheus
+  ansible.builtin.copy:
+    src: '{{ prometheus_yml_path }}'
+    dest: /etc/prometheus/prometheus.yml
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: reload_prometheus
+
+- name: Copy alerting_rules.yaml to /etc/prometheus
+  ansible.builtin.copy:
+    src: '{{ prometheus_alerting_rules_yaml_path }}'
+    dest: /etc/prometheus/alerting_rules.yaml
+    owner: root
+    group: root
+    mode: 0644
+  become: true
+  notify: reload_prometheus

@@ -1,0 +1,6 @@
+- name: Reload or start the Prometheus service
+  systemd:
+    name: prometheus.service
+    state: reloaded
+  listen: reload_prometheus
+  become: true

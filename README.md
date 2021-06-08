@@ -13,6 +13,16 @@ Pull requests to fix obvious minor issues are welcome, but it's unlikely that an
 - [awstats](roles/awstats) - installs and configures the [AWStats](https://awstats.sourceforge.io/) web server log analyzer
 - [bind](roles/bind) - installs and configures the `bind9` DNS server as well as one or more zone files.
 - [nginx](roles/nginx) - installs and configures the [nginx](https://nginx.org/) web server
+- [prometheus](roles/prometheus) - installs and configures the [Prometheus](https://prometheus.io/) monitoring system & time series database
+
+## Playbooks
+
+The following playbooks executes the above roles:
+
+- [awstats](awstats.yaml)
+- [bind.yaml](bind.yaml)
+- [nginx.yaml](nginx.yaml)
+- [prometheus.yaml](prometheus.yaml)
 
 ## Ansible config
 

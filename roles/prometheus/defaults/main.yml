@@ -1,0 +1,7 @@
+prometheus_etc_prometheus_path: '{{ inventory_dir }}/overrides/{{ inventory_hostname }}/prometheus/etc/prometheus'
+
+#
+# Variables below this line typically do not have to be modified.
+#
+prometheus_yml_path: '{{ prometheus_etc_prometheus_path }}/prometheus.yml'
+prometheus_alerting_rules_yaml_path: '{{ prometheus_etc_prometheus_path }}/alerting_rules.yaml'
