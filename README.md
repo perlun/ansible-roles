@@ -14,6 +14,10 @@ Pull requests to fix obvious minor issues are welcome, but it's unlikely that an
 - [bind](roles/bind) - installs and configures the `bind9` DNS server as well as one or more zone files.
 - [nginx](roles/nginx) - installs and configures the [nginx](https://nginx.org/) web server
 
+## Ansible config
+
+The [ansible.cfg.example](ansible.cfg.example) serves as an example of what your Ansible config can look like. `cp ansible.cfg.example ansible.cfg`, and Ansible will pick up the config automatically when running these roles.
+
 ## License
 
 [MIT](LICENSE)

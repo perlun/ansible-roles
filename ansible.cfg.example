@@ -1,0 +1,3 @@
+[defaults]
+inventory = ../ansible-config
+inventory_ignore_extensions = overrides,.md,.txt
