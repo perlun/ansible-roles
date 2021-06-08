@@ -1,8 +1,3 @@
-- name: Ensure mandatory variables are set
-  fail:
-    msg: "Mandatory variable nginx_etc_nginx_path must be set"
-  when: nginx_etc_nginx_path == None
-
 - name: Install/update nginx
   ansible.builtin.package:
     name:
@@ -24,6 +19,15 @@
     src: mod-http-perl.conf
   become: true
   notify: reload_nginx
+
+- name: Ensure /etc/nginx/ssl exists
+  ansible.builtin.file:
+    path: /etc/nginx/ssl
+    owner: root
+    group: root
+    mode: 0755
+    state: directory
+  become: true
 
 - name: Copy options-ssl-nginx.conf to /etc/nginx/ssl
   ansible.builtin.copy:

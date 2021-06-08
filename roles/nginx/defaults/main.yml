@@ -1,10 +1,8 @@
 # The path in the inventory to where the files in /etc/nginx/sites-enabled will
-# be copied from. Note that no default value is provided by this role; you must
-# set in the inventory on host/group level.
-#
-# Typical override value:
-# {{ inventory_dir }}/overrides/<host>/nginx/etc/nginx
-nginx_etc_nginx_path: null
+# be copied from. The default value is suitable for single-host setups, but if
+# you want to deploy the same config to multiple host you need to override this
+# in group_vars.
+nginx_etc_nginx_path: '{{ inventory_dir }}/overrides/{{ inventory_hostname }}/nginx/etc/nginx'
 
 #
 # Variables below this line typically do not have to be modified.
