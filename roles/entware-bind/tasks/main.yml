@@ -1,0 +1,13 @@
+- name: Ensure mandatory variables are set
+  fail:
+    msg: Mandatory variable entware_bind_named_conf_path must be set
+  when: entware_bind_named_conf_path == None
+
+- name: Copy configuration to /opt/etc/bind
+  ansible.builtin.template:
+    src: '{{ entware_bind_named_conf_path }}'
+    dest: /opt/etc/bind/named.conf
+    group: root
+    mode: 0644
+    backup: false
+  #notify: restart_bind

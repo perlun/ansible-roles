@@ -1,0 +1,12 @@
+- name: Runs the entware-bind role
+  hosts: all
+  gather_facts: no
+  pre_tasks:
+    - import_tasks: include/common_pre_tasks.yml
+
+  roles:
+    - role: entware-bind
+
+  module_defaults:
+    apt:
+      force_apt_get: yes

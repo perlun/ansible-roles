@@ -1,0 +1,7 @@
+#
+# DISABLED for now since it stopped named but failed to start it again afterwards. Have to live with manual restarts for now. (/opt/etc/init.d/S09named restart)
+#
+
+# - name: Restart the bind service
+#   ansible.builtin.raw: /opt/etc/init.d/S09named stop && sleep 1 && /opt/etc/init.d/S09named start
+#   listen: restart_bind
