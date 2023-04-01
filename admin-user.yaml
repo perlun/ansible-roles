@@ -1,0 +1,13 @@
+- name: Creates an administrative user account
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - import_tasks: include/common_pre_tasks.yml
+
+  roles:
+    - role: admin-user
+
+  module_defaults:
+    apt:
+      force_apt_get: yes

@@ -10,6 +10,7 @@ Pull requests to fix obvious minor issues are welcome, but it's unlikely that an
 
 ## Roles
 
+- [admin-user](roles/admin-user) - creates an admin user account with `~/.ssh/authorized_keys` authentication and passwordless sudo
 - [awstats](roles/awstats) - installs and configures the [AWStats](https://awstats.sourceforge.io/) web server log analyzer
 - [bind](roles/bind) - installs and configures the `bind9` DNS server as well as one or more zone files.
 - [nginx](roles/nginx) - installs and configures the [nginx](https://nginx.org/) web server
@@ -19,6 +20,7 @@ Pull requests to fix obvious minor issues are welcome, but it's unlikely that an
 
 The following playbooks executes the above roles:
 
+- [admin-user](admin-user.yaml)
 - [awstats](awstats.yaml)
 - [bind.yaml](bind.yaml)
 - [nginx.yaml](nginx.yaml)

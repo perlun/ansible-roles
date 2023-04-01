@@ -1,0 +1,44 @@
+- name: Create admin user {{ admin_user }}
+  ansible.builtin.user:
+    name: '{{ admin_user }}'
+    comment: '{{ admin_user_comment }}'
+    uid: 1000
+    groups:
+      - sudo
+    shell: /bin/bash
+
+- name: Ensure sudo is installed
+  ansible.builtin.package:
+    name: sudo
+
+- name: Enable passwordless sudo
+  ansible.builtin.copy:
+    dest: /etc/sudoers.d/passwordless-sudo
+    content: |
+      %sudo  ALL=(ALL:ALL) NOPASSWD: ALL
+
+- name: Create /home/{{ admin_user }}/.ssh directory
+  ansible.builtin.file:
+    dest: /home/{{ admin_user }}/.ssh
+    owner: '{{ admin_user }}'
+    group: '{{ admin_user }}'
+    mode: 0700
+    state: directory
+
+- name: Enable authorized_keys-based SSH login
+  ansible.builtin.copy:
+    dest: /home/{{ admin_user }}/.ssh/authorized_keys
+    content: |
+      {{ admin_user_ssh_key }}
+    owner: '{{ admin_user }}'
+    group: '{{ admin_user }}'
+    mode: 0600
+
+# This file is created when the container is created to allow key-based access
+# from a user-provided SSH key. Now that we have the admin account set up, being
+# able to log in as `root` is no longer needed and removing it is can be seen a
+# slight security improvement.
+- name: Remove /root/.ssh/authorized_keys
+  ansible.builtin.file:
+    dest: /root/.ssh/authorized_keys
+    state: absent
