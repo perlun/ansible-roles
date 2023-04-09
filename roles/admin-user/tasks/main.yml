@@ -3,8 +3,17 @@
     name: '{{ admin_user }}'
     comment: '{{ admin_user_comment }}'
     uid: 1000
+
+    # Add the user to the `sudo` group if not present, but do not remove any
+    # existing group memberships.
     groups:
       - sudo
+
+    append: true
+
+    # Password is disabled by default, for better security.
+    password: !
+
     shell: /bin/bash
 
 - name: Ensure sudo is installed
