@@ -1,0 +1,13 @@
+- name: Runs the homeassistant role
+  hosts: all
+  become: true
+
+  pre_tasks:
+    - import_tasks: include/common_pre_tasks.yml
+
+  roles:
+    - role: homeassistant
+
+  module_defaults:
+    apt:
+      force_apt_get: yes

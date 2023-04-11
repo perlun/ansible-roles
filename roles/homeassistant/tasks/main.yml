@@ -1,0 +1,35 @@
+- name: Install/update required packages
+  ansible.builtin.package:
+    name:
+      - docker.io
+      - docker-compose
+      - python3-docker
+
+    # Deliberately not using 'state: latest' to avoid unexpected surprises when
+    # e.g. deploying updated configuration.
+    state: present
+
+# This makes it possible to do things like `docker ps` without sudo.
+- name: Ensure personal account has access to docker group
+  ansible.builtin.user:
+    name: '{{ homeassistant_admin_user }}'
+
+    # Add the user to the `docker` group if not present, but do not remove any
+    # existing group memberships.
+    groups: docker
+    append: true
+
+- name: Create /opt/homeassistant directory
+  ansible.builtin.file:
+    dest: /opt/homeassistant
+    mode: 0755
+    state: directory
+
+- name: Create Home Assisstant Docker Compose config
+  ansible.builtin.template:
+    dest: /opt/homeassistant/docker-compose.yml
+    src: opt/homeassistant/docker-compose.yml.j2
+
+- name: Start Home Assisstant
+  community.docker.docker_compose:
+    project_src: /opt/homeassistant
