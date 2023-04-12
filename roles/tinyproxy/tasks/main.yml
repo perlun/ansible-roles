@@ -1,0 +1,17 @@
+- name: Ensure mandatory variables are set
+  fail:
+    msg: "Mandatory variable tinyproxy_whitelist must be set"
+  when: tinyproxy_whitelist | default(None) == None
+
+- name: Ensure tinyproxy is installed
+  ansible.builtin.package:
+    name: tinyproxy
+  become: true
+
+- name: Allow access from whitelisted IP ranges
+  ansible.builtin.blockinfile:
+    insertafter: ^#Allow
+    path: /etc/tinyproxy/tinyproxy.conf
+    block: '{{ tinyproxy_whitelist }}'
+  become: true
+  notify: restart_tinyproxy
